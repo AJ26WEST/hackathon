@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Climate Insights Platform</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+        .container {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 300px;
+            text-align: center;
+        }
+        h1 {
+            color: #007BFF;
+        }
+        form {
+            margin: 20px 0;
+        }
+        input {
+            display: block;
+            margin: 10px 0;
+            padding: 10px;
+            width: 100%;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            transition: border-color 0.3s;
+        }
+        input:focus {
+            border-color: #007BFF;
+            outline: none;
+        }
+        button {
+            padding: 10px 15px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+            width: 100%;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .dashboard {
+            display: none;
+            width: 100%;
+            max-width: 800px;
+            margin: auto;
+            padding: 20px;
+            overflow-y: auto;
+            height: 80vh;
+        }
+        .info {
+            margin-top: 20px;
+            font-size: 1.1em;
+        }
+        .section {
+            margin: 20px 0;
+            padding: 15px;
+            background: #e9ecef;
+            border-radius: 8px;
+        }
+        footer {
+            margin-top: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container" id="loginContainer">
+        <h1>Login</h1>
+        <form id="loginForm" onsubmit="return handleLogin(event)">
+            <input type="text" placeholder="Username" id="username" required>
+            <input type="password" placeholder="Password" id="password" required>
+            <button type="submit">Login</button>
+        </form>
+    </div>
+
+    <div class="dashboard" id="dashboard">
+        <h1>Dashboard</h1>
+        <div class="section" id="climateData">
+            <h2>Current Climate Data</h2>
+            <p><strong>Average Temperature:</strong> 30°C</p>
+            <p><strong>CO2 Levels:</strong> 400 ppm</p>
+            <p><strong>Global Average Sea Level Rise:</strong> 3.3 mm/year</p>
+            <p>Stay informed about climate changes and make a difference!</p>
+        </div>
+        
+        <div class="section" id="predictions">
+            <h2>Future Predictions</h2>
+            <p><strong>Expected Temperature Increase:</strong> 2°C by 2050</p>
+            <p><strong>Extreme Weather Events:</strong> Increasing frequency predicted.</p>
+            <p><strong>Sea Level Rise:</strong> Continued rise expected over the next decades.</p>
+        </div>
+
+        <div class="section" id="footprintTracker">
+            <h2>Carbon Footprint Tracker</h2>
+            <p>Track your carbon footprint and take action:</p>
+            <ul>
+                <li>Reduce car travel.</li>
+                <li>Use energy-efficient appliances.</li>
+                <li>Support renewable energy sources.</li>
+            </ul>
+        </div>
+        
+        <footer>
+            <p>&copy; 2024 Climate Insights Platform | All Rights Reserved</p>
+        </footer>
+    </div>
+
+    <script>
+        function handleLogin(event) {
+            event.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            // Mock login check (replace with your logic)
+            if (username === 'user' && password === 'password') {
+                document.getElementById('loginContainer').style.display = 'none';
+                document.getElementById('dashboard').style.display = 'block';
+            } else {
+                alert("Invalid credentials. Please try again.");
+            }
+        }
+    </script>
+</body>
+</html>
