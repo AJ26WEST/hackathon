@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Climate Insights Platform</title>
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    .moving-background {
+      background: url('https://cdn.pixabay.com/photo/2015/11/01/08/55/sun-1014712_1280.jpg') no-repeat center center fixed;
+      background-size: cover;
+      height: 100%;
+      animation: moveBackground 20s linear infinite;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    @keyframes moveBackground {
+      0% { background-position: 0 0; }
+      100% { background-position: 1000px 0; }
+    }
+
+    .auth-container {
+      background-color: rgba(255, 255, 255, 0.8);
+      padding: 2rem;
+      border-radius: 10px;
+      text-align: center;
+      width: 300px;
+    }
+
+    .auth-container h2 {
+      margin-bottom: 1rem;
+      color: #2C3E50;
+    }
+
+    .auth-container input {
+      width: 100%;
+      padding: 0.5rem;
+      margin: 0.5rem 0;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    .auth-container button {
+      padding: 0.7rem;
+      width: 100%;
+      background-color: #2C3E50;
+      color: white;
+      border: none;
+      cursor: pointer;
+      margin-top: 1rem;
+      border-radius: 5px;
+    }
+
+    .auth-container button:hover {
+      background-color: #000000;
+    }
+
+    #login-page, #signup-page, #dashboard {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #dashboard {
+      background-color: #f4f4f4;
+    }
+
+    nav {
+      display: flex;
+      justify-content: space-between;
+      padding: 1rem;
+      background-color: #2C3E50;
+      color: white;
+      width: 100%;
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 1rem;
+    }
+
+    nav ul li {
+      display: inline;
+    }
+
+    .container {
+      padding: 2rem;
+    }
+
+    canvas {
+      margin-top: 2rem;
+    }
+
+    .error-message {
+      color: red;
+      font-size: 0.9rem;
+      margin-top: 0.5rem;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Login Page -->
+  <div id="login-page" class="moving-background">
+    <div class="auth-container">
+      <h2>Login</h2>
+      <input type="email" id="loginEmail" placeholder="Email" required>
+      <input type="password" id="loginPassword" placeholder="Password" required>
+      <button onclick="login()">Login</button>
+      <p>Don't have an account? <a href="#" onclick="showSignup()">Sign up</a></p>
+      <div id="loginError" class="error-message"></div>
+    </div>
+  </div>
+
+  <!-- Signup Page -->
+  <div id="signup-page" class="moving-background">
+    <div class="auth-container">
+      <h2>Sign Up</h2>
+      <input type="text" id="signupUsername" placeholder="Username" required>
+      <input type="email" id="signupEmail" placeholder="Email" required>
+      <input type="password" id="signupPassword" placeholder="Password" required>
+      <button onclick="signup()">Sign Up</button>
+      <p>Already have an account? <a href="#" onclick="showLogin()">Login</a></p>
+      <div id="signupError" class="error-message"></div>
+    </div>
+  </div>
+
+  <!-- Dashboard -->
+  <div id="dashboard">
+    <nav>
+      <h2>Climate Insights Platform</h2>
+      <ul>
+        <li><a href="#" onclick="showSection('dashboard-content')">Dashboard</a></li>
+        <li><a href="#" onclick="showSection('prediction')">Prediction</a></li>
+        <li><a href="#" onclick="showSection('footprint')">Footprint Tracker</a></li>
+      </ul>
+    </nav>
+    
+    <div id="dashboard-content" class="container">
+      <h2>Climate Data Dashboard</h2>
+      <canvas id="climateChart"></canvas>
+    </div>
+
+    <div id="prediction" class="container" style="display: none;">
+      <h2>Climate Prediction</h2>
+      <form onsubmit="predictClimate(event)">
+        <label>CO₂ Emissions (ppm):</label>
+        <input type="number" id="co2Input" required />
+        <label>Deforestation Rate (hectares/year):</label>
+        <input type="number" id="deforestationInput" required />
+        <button type="submit">Predict Climate Impact</button>
+      </form>
+      <div id="predictionResult"></div>
+    </div>
+
+    <div id="footprint" class="container" style="display: none;">
+      <h2>Carbon Footprint Tracker</h2>
+      <form onsubmit="calculateFootprint(event)">
+        <label>Transport (kg CO₂/year):</label>
+        <input type="number" id="transportInput" required />
+        <label>Energy Use (kg CO₂/year):</label>
+        <input type="number" id="energyInput" required />
+        <label>Diet (kg CO₂/year):</label>
+        <input type="number" id="dietInput" required />
+        <button type="submit">Calculate Footprint</button>
+      </form>
+      <div id="footprintResult"></div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    // Show login page by default
+    showLogin();
+
+    // Handle showing pages
+    function showLogin() {
+      document.getElementById('login-page').style.display = 'flex';
+      document.getElementById('signup-page').style.display = 'none';
+      document.getElementById('dashboard').style.display = 'none';
+    }
+
+    function showSignup() {
+      document.getElementById('login-page').style.display = 'none';
+      document.getElementById('signup-page').style.display = 'flex';
+    }
+
+    // Simulate login/signup actions
+    function login() {
+      const email = document.getElementById('loginEmail').value;
+      const password = document.getElementById('loginPassword').value;
+      const loginError = document.getElementById('loginError');
+
+      if (!email || !password) {
+        loginError.innerText = 'Please enter both email and password.';
+        return;
+      }
+
+      // Clear error and proceed to dashboard
+      loginError.innerText = '';
+      document.getElementById('login-page').style.display = 'none';
+      document.getElementById('dashboard').style.display = 'flex';
+      displayClimateChart();
+    }
+
+    function signup() {
+      const username = document.getElementById('signupUsername').value;
+      const email = document.getElementById('signupEmail').value;
+      const password = document.getElementById('signupPassword').value;
+      const signupError = document.getElementById('signupError');
+
+      if (!username || !email || !password) {
+        signupError.innerText = 'Please fill in all fields.';
+        return;
+      }
+
+      // Clear error and proceed to dashboard
+      signupError.innerText = '';
+      document.getElementById('signup-page').style.display = 'none';
+      document.getElementById('dashboard').style.display = 'flex';
+      displayClimateChart();
+    }
+
+    // Show specific section in dashboard
+    function showSection(sectionId) {
+      const sections = ['dashboard-content', 'prediction', 'footprint'];
+      sections.forEach(id => {
+        document.getElementById(id).style.display = 'none';
+      });
+      document.getElementById(sectionId).style.display = 'block';
+    }
+
+    function displayClimateChart() {
+      const ctx = document.getElementById('climateChart').getContext('2d');
+      const climateChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: ['2015', '2016', '2017', '2018', '2019', '2020', '2021'],
+          datasets: [{
+            label: 'Global Temperature Anomaly',
+            data: [0.5, 0.6, 0.7, 0.8, 1.0, 1.1, 1.2],
+            borderColor: 'rgba(255, 99, 132, 1)',
+            borderWidth: 2,
+            fill: false
+          }]
+        },
+        options: {
+          responsive: true,
+          scales: {
+            y: {
+              beginAtZero: true,
+              title: {
+                display: true,
+                text: 'Temperature Anomaly (°C)'
+              }
+            }
+          }
+        }
+      });
+    }
+
+    function predictClimate(event) {
+      event.preventDefault();
+      // Implement prediction logic here
+      const co2 = document.getElementById('co2Input').value;
+      const deforestation = document.getElementById('deforestationInput').value;
+      document.getElementById('predictionResult').innerText = Predicted climate impact based on ${co2} ppm CO₂ and ${deforestation} hectares/year deforestation.;
+    }
+
+    function calculateFootprint(event) {
+      event.preventDefault();
+      // Implement footprint calculation logic here
+      const transport = document.getElementById('transportInput').value;
+      const energy = document.getElementById('energyInput').value;
+      const diet = document.getElementById('dietInput').value;
+      const totalFootprint = parseFloat(transport) + parseFloat(energy) + parseFloat(diet);
+      document.getElementById('footprintResult').innerText = Your total carbon footprint is ${totalFootprint} kg CO₂/year.;
+    }
+  </script>
+</body>
+</html>
