@@ -1,3 +1,7 @@
+npx create-react-app climate-insights-platform
+cd climate-insights-platform
+npm install chart.js react-chartjs-2 axios
+
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Navbar from './components/Navbar';
