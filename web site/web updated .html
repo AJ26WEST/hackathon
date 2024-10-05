@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Climate Insights Platform</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        nav {
+            background: #007BFF;
+            padding: 15px;
+            color: white;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        nav a {
+            color: white;
+            margin: 0 15px;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        nav a:hover {
+            color: #FFD700; /* Gold color on hover */
+        }
+        .container {
+            padding: 20px;
+            max-width: 800px;
+            margin: auto;
+        }
+        .component {
+            display: none;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin: 20px 0;
+            transition: all 0.3s ease;
+        }
+        .active {
+            display: block;
+        }
+        form {
+            margin: 20px 0;
+        }
+        input {
+            display: block;
+            margin: 10px 0;
+            padding: 10px;
+            width: 100%;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            transition: border-color 0.3s;
+        }
+        input:focus {
+            border-color: #007BFF;
+            outline: none;
+        }
+        button {
+            padding: 10px 15px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #0056b3; /* Darker blue on hover */
+        }
+        canvas {
+            max-width: 100%;
+            margin: auto;
+        }
+        .info {
+            margin-top: 20px;
+            font-size: 1.1em;
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <a href="#dashboard" onclick="showComponent('dashboard')">Dashboard</a>
+        <a href="#prediction" onclick="showComponent('prediction')">Prediction</a>
+        <a href="#footprint" onclick="showComponent('footprint')">Footprint Tracker</a>
+        <a href="#login" onclick="showComponent('login')">Login</a>
+        <a href="#signup" onclick="showComponent('signup')">Sign Up</a>
+    </nav>
+
+    <div class="container" id="content">
+        <div id="dashboard" class="component active">
+            <h1>Dashboard</h1>
+            <canvas id="myChart" width="400" height="200"></canvas>
+            <div class="info">
+                <h2>Current Climate Data</h2>
+                <p><strong>Average Temperature:</strong> 30°C</p>
+                <p><strong>CO2 Levels:</strong> 400 ppm</p>
+                <p><strong>Global Average Sea Level Rise:</strong> 3.3 mm/year</p>
+                <p>Stay informed about climate changes and make a difference!</p>
+            </div>
+        </div>
+
+        <div id="prediction" class="component">
+            <h1>Prediction</h1>
+            <p>Loading prediction data...</p>
+            <div class="info">
+                <p><strong>Future Predictions:</strong></p>
+                <ul>
+                    <li>Temperature increase by 2°C by 2050.</li>
+                    <li>Increased frequency of extreme weather events.</li>
+                    <li>Continued rise in sea levels.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div id="footprint" class="component">
+            <h1>Footprint Tracker</h1>
+            <p>Footprint Tracker Component</p>
+            <div class="info">
+                <p>Track your carbon footprint and take action:</p>
+                <ul>
+                    <li>Reduce car travel.</li>
+                    <li>Use energy-efficient appliances.</li>
+                    <li>Support renewable energy sources.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div id="login" class="component">
+            <h1>Login</h1>
+            <form id="loginForm" onsubmit="return handleLogin(event)">
+                <input type="text" placeholder="Username" required>
+                <input type="password" placeholder="Password" required>
+                <button type="submit">Login</button>
+            </form>
+        </div>
+
+        <div id="signup" class="component">
+            <h1>Sign Up</h1>
+            <form id="signupForm" onsubmit="return handleSignup(event)">
+                <input type="text" placeholder="Username" required>
+                <input type="email" placeholder="Email" required>
+                <input type="password" placeholder="Password" required>
+                <button type="submit">Sign Up</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        function showComponent(componentId) {
+            const components = document.querySelectorAll('.component');
+            components.forEach(component => {
+                component.classList.remove('active');
+            });
+
+            document.getElementById(componentId).classList.add('active');
+        }
+
+        function handleLogin(event) {
+            event.preventDefault();
+            alert("Login submitted!");
+            // You can add login logic here
+        }
+
+        function handleSignup(event) {
+            event.preventDefault();
+            alert("Signup submitted!");
+            // You can add signup logic here
+        }
+
+        // Initialize chart in dashboard
+        const ctx = document.getElementById('myChart').getContext('2d');
+        const myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['January', 'February', 'March', 'April'],
+                datasets: [{
+                    label: 'Temperature (°C)',
+                    data: [30, 35, 32, 28],
+                    backgroundColor: 'rgba(75, 192, 192, 0.6)',
+                }],
+            },
+        });
+
+        // Show the dashboard by default
+        showComponent('dashboard');
+    </script>
+</body>
+</html>
