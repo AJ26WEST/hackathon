@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Climate Insights Platform</title>
+  <style>
+    /* General Styles */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body, html {
+      font-family: 'Arial', sans-serif;
+      height: 100%;
+      background-color: #f0f8ff;
+    }
+
+    /* Moving Background */
+    .moving-background {
+      background: url('https://cdn.pixabay.com/photo/2020/03/14/23/16/climate-change-4934642_1280.jpg') no-repeat center center fixed;
+      background-size: cover;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: background 1s ease-in-out;
+    }
+
+    /* Authentication Containers */
+    .auth-container {
+      background-color: rgba(255, 255, 255, 0.85);
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      text-align: center;
+      width: 350px;
+      transition: all 0.4s ease;
+    }
+
+    .auth-container:hover {
+      box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    .auth-container h2 {
+      margin-bottom: 1.5rem;
+      color: #34495E;
+    }
+
+    .auth-container input {
+      width: 100%;
+      padding: 0.6rem;
+      margin: 0.6rem 0;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      transition: border-color 0.3s ease;
+    }
+
+    .auth-container input:focus {
+      border-color: #34495E;
+      outline: none;
+    }
+
+    .auth-container button {
+      padding: 0.8rem;
+      width: 100%;
+      background-color: #34495E;
+      color: white;
+      border: none;
+      cursor: pointer;
+      margin-top: 1.2rem;
+      border-radius: 8px;
+      transition: background-color 0.3s ease;
+    }
+
+    .auth-container button:hover {
+      background-color: #2C3E50;
+    }
+
+    .auth-container p {
+      margin-top: 1rem;
+      color: #2C3E50;
+    }
+
+    .auth-container a {
+      color: #3498DB;
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+
+    .auth-container a:hover {
+      color: #2980B9;
+    }
+
+    /* Page Wrappers */
+    #login-page, #signup-page, #forgot-password-page, #dashboard {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      justify-content: center;
+      align-items: center;
+    }
+
+    /* Dashboard Styling */
+    #dashboard {
+      background-color: #f4f4f4;
+      display: flex;
+      flex-direction: column;
+      transition: background-color 0.5s ease;
+    }
+
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem;
+      background-color: #34495E;
+      color: white;
+      width: 100%;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    nav h2 {
+      margin: 0;
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 1rem;
+    }
+
+    nav ul li {
+      display: inline;
+    }
+
+    nav ul li a {
+      color: white;
+      text-decoration: none;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      transition: background-color 0.3s ease;
+    }
+
+    nav ul li a:hover {
+      background-color: #2C3E50;
+    }
+
+    .container {
+      padding: 2rem;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background-color: #ECF0F1;
+    }
+
+    canvas {
+      margin-top: 2rem;
+      max-width: 700px;
+    }
+
+    /* Prediction and Footprint Forms */
+    form {
+      width: 100%;
+      max-width: 500px;
+      margin-bottom: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    form label {
+      font-weight: bold;
+      color: #34495E;
+    }
+
+    form input {
+      width: 100%;
+      padding: 0.6rem;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      transition: border-color 0.3s ease;
+    }
+
+    form input:focus {
+      border-color: #2980B9;
+      outline: none;
+    }
+
+    .form-container {
+      width: 100%;
+      max-width: 600px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .form-container h2 {
+      margin-bottom: 1rem;
+      color: #34495E;
+    }
+
+    .form-container div {
+      margin-bottom: 1rem;
+      width: 100%;
+    }
+
+    /* Error Message */
+    .error-message {
+      color: red;
+      font-size: 0.9rem;
+      margin-top: 0.5rem;
+    }
+
+    /* Success Message */
+    .success-message {
+      color: green;
+      margin-top: 1rem;
+    }
+
+    /* Color Change */
+    .color-change {
+      position: fixed;
+      top: 1rem;
+      right: 1rem;
+      background-color: #2C3E50;
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .color-change:hover {
+      background-color: #34495E;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Login Page -->
+  <div id="login-page" class="moving-background" style="display: flex;">
+    <div class="auth-container">
+      <h2>Login</h2>
+      <input type="email" id="loginEmail" placeholder="Email" required>
+      <input type="password" id="loginPassword" placeholder="Password" required>
+      <button onclick="login()">Login</button>
+      <p>Don't have an account? <a href="#" onclick="showSignup()">Sign up</a></p>
+      <p><a href="#" onclick="showForgotPassword()">Forgot Password?</a></p>
+      <div id="loginError" class="error-message"></div>
+    </div>
+  </div>
+
+  <!-- Signup Page -->
+  <div id="signup-page" class="moving-background">
+    <div class="auth-container">
+      <h2>Sign Up</h2>
+      <input type="text" id="signupUsername" placeholder="Username" required>
+      <input type="email" id="signupEmail" placeholder="Email" required>
+      <input type="password" id="signupPassword" placeholder="Password" required>
+      <button onclick="signup()">Sign Up</button>
+      <p>Already have an account? <a href="#" onclick="showLogin()">Login</a></p>
+      <div id="signupError" class="error-message"></div>
+    </div>
+  </div>
+
+  <!-- Forgot Password Page -->
+  <div id="forgot-password-page" class="moving-background">
+    <div class="auth-container">
+      <h2>Forgot Password</h2>
+      <input type="email" id="forgotEmail" placeholder="Enter your email" required>
+      <button onclick="resetPassword()">Reset Password</button>
+      <p><a href="#" onclick="showLogin()">Back to Login</a></p>
+      <div id="forgotPasswordError" class="error-message"></div>
+      <div id="forgotPasswordSuccess" class="success-message"></div>
+    </div>
+  </div>
+
+  <!-- Dashboard -->
+  <div id="dashboard">
+    <nav>
+      <h2>Climate Insights Platform</h2>
+      <ul>
+        <li><a href="#" onclick="showSection('dashboard-content')">Dashboard</a></li>
+        <li><a href="#" onclick="showSection('prediction')">Prediction</a></li>
+        <li><a href="#" onclick="showSection('footprint')">Footprint Tracker</a></li>
+        <li><a href="#" onclick="showSection('globalTempInfo')">Global Temperature Info</a></li>
+      </ul>
+    </nav>
+
+    <!-- Color change button -->
+    <div class="color-change" onclick="changeBackground()">Change Background</div>
+
+    <!-- Dashboard Content -->
+    <div id="dashboard-content" class="container">
+      <h2>Global Climate Dashboard</h2>
+      <canvas id="climateChart"></canvas>
+    </div>
+
+    <!-- Prediction Section -->
+    <div id="prediction" class="container" style="display: none;">
+      <h2>Climate Prediction</h2>
+      <form onsubmit="predictClimate(event)">
+        <label for="co2Input">CO₂ Concentration (ppm):</label>
+        <input type="number" id="co2Input" required>
+        <label for="deforestationInput">Deforestation (hectares/year):</label>
+        <input type="number" id="deforestationInput" required>
+        <button type="submit">Predict</button>
+      </form>
+      <div id="predictionResult"></div>
+    </div>
+
+    <!-- Footprint Tracker Section -->
+    <div id="footprint" class="container" style="display: none;">
+      <h2>Carbon Footprint Tracker</h2>
+      <form onsubmit="calculateFootprint(event)">
+        <label for="transportInput">Transport (kg CO₂/year):</label>
+        <input type="number" id="transportInput" required>
+        <label for="energyInput">Energy Consumption (kg CO₂/year):</label>
+        <input type="number" id="energyInput" required>
+        <label for="dietInput">Diet (kg CO₂/year):</label>
+        <input type="number" id="dietInput" required>
+        <button type="submit">Calculate</button>
+      </form>
+      <div id="footprintResult"></div>
+    </div>
+
+    <!-- Global Temperature Info Section -->
+    <div id="globalTempInfo" class="container" style="display: none;">
+      <h2>Global Temperature Information</h2>
+      <p>The global average temperature has risen significantly since the industrial era, with the most recent data showing a sharp increase in temperature anomalies.</p>
+      <canvas id="tempInfoChart"></canvas>
+    </div>
+
+  </div>
+
+  <script>
+    // Color Changing Background
+    function changeBackground() {
+      document.body.classList.toggle('alt-background');
+    }
+
+    // Page navigation functions
+    function showLogin() {
+      document.getElementById('login-page').style.display = 'flex';
+      document.getElementById('signup-page').style.display = 'none';
+      document.getElementById('forgot-password-page').style.display = 'none';
+      document.getElementById('dashboard').style.display = 'none';
+    }
+
+    function showSignup() {
+      document.getElementById('login-page').style.display = 'none';
+      document.getElementById('signup-page').style.display = 'flex';
+      document.getElementById('forgot-password-page').style.display = 'none';
+      document.getElementById('dashboard').style.display = 'none';
+    }
+
+    function showForgotPassword() {
+      document.getElementById('login-page').style.display = 'none';
+      document.getElementById('signup-page').style.display = 'none';
+      document.getElementById('forgot-password-page').style.display = 'flex';
+      document.getElementById('dashboard').style.display = 'none';
+    }
+
+    function showSection(sectionId) {
+      document.getElementById('dashboard-content').style.display = 'none';
+      document.getElementById('prediction').style.display = 'none';
+      document.getElementById('footprint').style.display = 'none';
+      document.getElementById('globalTempInfo').style.display = 'none';
+      document.getElementById(sectionId).style.display = 'flex';
+    }
+
+    // Handle login
+    function login() {
+      const email = document.getElementById('loginEmail').value;
+      const password = document.getElementById('loginPassword').value;
+      const loginError = document.getElementById('loginError');
+
+      if (!email || !password) {
+        loginError.innerText = 'Please fill in all fields.';
+        return;
+      }
+
+      loginError.innerText = '';
+      document.getElementById('login-page').style.display = 'none';
+      document.getElementById('dashboard').style.display = 'flex';
+      showSection('dashboard-content');
+    }
+
+    // Simulate signup
+    function signup() {
+      const username = document.getElementById('signupUsername').value;
+      const email = document.getElementById('signupEmail').value;
+      const password = document.getElementById('signupPassword').value;
+      const signupError = document.getElementById('signupError');
+
+      if (!username || !email || !password) {
+        signupError.innerText = 'Please fill all fields.';
+        return;
+      }
+
+      signupError.innerText = '';
+      showLogin();
+    }
+
+    // Simulate forgot password action
+    function resetPassword() {
+      const email = document.getElementById('forgotEmail').value;
+      const forgotPasswordError = document.getElementById('forgotPasswordError');
+      const forgotPasswordSuccess = document.getElementById('forgotPasswordSuccess');
+
+      if (!email) {
+        forgotPasswordError.innerText = 'Please enter your email address.';
+        return;
+      }
+
+      forgotPasswordError.innerText = '';
+      forgotPasswordSuccess.innerText = 'A password reset link has been sent to your email.';
+    }
+
+    // Display climate chart
+    function displayClimateChart() {
+      const ctx = document.getElementById('climateChart').getContext('2d');
+      new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: ['2015', '2016', '2017', '2018', '2019', '2020', '2021'],
+          datasets: [{
+            label: 'Global Temperature Anomaly',
+            data: [0.5, 0.6, 0.7, 0.8, 1.0, 1.1, 1.2],
+            borderColor: 'rgba(255, 99, 132, 1)',
+            borderWidth: 2,
+            fill: false
+          }]
+        },
+        options: {
+          responsive: true,
+          scales: {
+            y: {
+              beginAtZero: true,
+              title: {
+                display: true,
+                text: 'Temperature Anomaly (°C)'
+              }
+            }
+          }
+        }
+      });
+    }
+
+    // Display Global Temperature Info Chart
+    function displayTempInfoChart() {
+      const ctx = document.getElementById('tempInfoChart').getContext('2d');
+      new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: ['1880', '1900', '1920', '1940', '1960', '1980', '2000', '2020'],
+          datasets: [{
+            label: 'Global Temperature (°C)',
+            data: [-0.12, -0.08, 0.02, 0.08, 0.14, 0.35, 0.5, 1.2],
+            borderColor: 'rgba(75, 192, 192, 1)',
+            borderWidth: 2,
+            fill: false
+          }]
+        },
+        options: {
+          responsive: true,
+          scales: {
+            y: {
+              beginAtZero: false,
+              title: {
+                display: true,
+                text: 'Global Temperature (°C)'
+              }
+            }
+          }
+        }
+      });
+    }
+
+    // Simulate climate prediction
+    function predictClimate(event) {
+      event.preventDefault();
+      const co2 = document.getElementById('co2Input').value;
+      const deforestation = document.getElementById('deforestationInput').value;
+      document.getElementById('predictionResult').innerText = `Predicted climate impact based on ${co2} ppm CO₂ and ${deforestation} hectares/year deforestation.`;
+    }
+
+    // Simulate carbon footprint calculation
+    function calculateFootprint(event) {
+      event.preventDefault();
+      const transport = document.getElementById('transportInput').value;
+      const energy = document.getElementById('energyInput').value;
+      const diet = document.getElementById('dietInput').value;
+      const totalFootprint = parseFloat(transport) + parseFloat(energy) + parseFloat(diet);
+      document.getElementById('footprintResult').innerText = `Your total carbon footprint is ${totalFootprint} kg CO₂/year.`;
+    }
+
+    // Initialize charts when the page loads
+    window.onload = function () {
+      displayClimateChart();
+      displayTempInfoChart();
+    }
+  </script>
+</body>
+</html>
