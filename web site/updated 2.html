@@ -13,19 +13,14 @@
       overflow: hidden;
     }
 
+    /* Moving Background */
     .moving-background {
-      background: url('https://cdn.pixabay.com/photo/2015/11/01/08/55/sun-1014712_1280.jpg') no-repeat center center fixed;
+      background: url('https://cdn.pixabay.com/photo/2020/03/14/23/16/climate-change-4934642_1280.jpg') no-repeat center center fixed;
       background-size: cover;
       height: 100%;
-      animation: moveBackground 20s linear infinite;
       display: flex;
       justify-content: center;
       align-items: center;
-    }
-
-    @keyframes moveBackground {
-      0% { background-position: 0 0; }
-      100% { background-position: 1000px 0; }
     }
 
     .auth-container {
@@ -75,17 +70,25 @@
       align-items: center;
     }
 
+    /* Dashboard and Navigation */
     #dashboard {
       background-color: #f4f4f4;
+      display: flex;
+      flex-direction: column;
     }
 
     nav {
       display: flex;
       justify-content: space-between;
+      align-items: center;
       padding: 1rem;
       background-color: #2C3E50;
       color: white;
       width: 100%;
+    }
+
+    nav h2 {
+      margin: 0;
     }
 
     nav ul {
@@ -100,16 +103,65 @@
 
     .container {
       padding: 2rem;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
     }
 
     canvas {
       margin-top: 2rem;
+      max-width: 600px;
     }
 
+    /* Prediction and Footprint Forms */
+    form {
+      width: 100%;
+      max-width: 500px;
+      margin-bottom: 2rem;
+    }
+
+    form label {
+      font-weight: bold;
+    }
+
+    form input {
+      width: 100%;
+      padding: 0.5rem;
+      margin: 0.5rem 0;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    .form-container {
+      width: 100%;
+      max-width: 600px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .form-container h2 {
+      margin-bottom: 1rem;
+    }
+
+    .form-container div {
+      margin-bottom: 1rem;
+      width: 100%;
+    }
+
+    /* Error Message */
     .error-message {
       color: red;
       font-size: 0.9rem;
       margin-top: 0.5rem;
+    }
+
+    /* Success Message */
+    .success-message {
+      color: green;
+      margin-top: 1rem;
     }
   </style>
 </head>
@@ -149,7 +201,7 @@
       <button onclick="resetPassword()">Reset Password</button>
       <p><a href="#" onclick="showLogin()">Back to Login</a></p>
       <div id="forgotPasswordError" class="error-message"></div>
-      <div id="forgotPasswordSuccess" style="color: green; margin-top: 1rem;"></div>
+      <div id="forgotPasswordSuccess" class="success-message"></div>
     </div>
   </div>
 
@@ -163,13 +215,15 @@
         <li><a href="#" onclick="showSection('footprint')">Footprint Tracker</a></li>
       </ul>
     </nav>
-    
+
+    <!-- Dashboard Content -->
     <div id="dashboard-content" class="container">
-      <h2>Climate Data Dashboard</h2>
+      <h2>Global Climate Data</h2>
       <canvas id="climateChart"></canvas>
     </div>
 
-    <div id="prediction" class="container" style="display: none;">
+    <!-- Climate Prediction Form -->
+    <div id="prediction" class="form-container" style="display: none;">
       <h2>Climate Prediction</h2>
       <form onsubmit="predictClimate(event)">
         <label>CO₂ Emissions (ppm):</label>
@@ -181,7 +235,8 @@
       <div id="predictionResult"></div>
     </div>
 
-    <div id="footprint" class="container" style="display: none;">
+    <!-- Carbon Footprint Tracker Form -->
+    <div id="footprint" class="form-container" style="display: none;">
       <h2>Carbon Footprint Tracker</h2>
       <form onsubmit="calculateFootprint(event)">
         <label>Transport (kg CO₂/year):</label>
@@ -217,27 +272,36 @@
 
     function showForgotPassword() {
       document.getElementById('login-page').style.display = 'none';
+      document.getElementById('signup-page').style.display = 'none';
       document.getElementById('forgot-password-page').style.display = 'flex';
     }
 
-    // Simulate login/signup actions
+    function showSection(sectionId) {
+      document.getElementById('dashboard-content').style.display = 'none';
+      document.getElementById('prediction').style.display = 'none';
+      document.getElementById('footprint').style.display = 'none';
+      document.getElementById(sectionId).style.display = 'flex';
+    }
+
+    // Handle login
     function login() {
       const email = document.getElementById('loginEmail').value;
       const password = document.getElementById('loginPassword').value;
       const loginError = document.getElementById('loginError');
 
       if (!email || !password) {
-        loginError.innerText = 'Please enter both email and password.';
+        loginError.innerText = 'Please fill in all fields.';
         return;
       }
 
-      // Clear error and proceed to dashboard
+      // Simulate login success
       loginError.innerText = '';
       document.getElementById('login-page').style.display = 'none';
       document.getElementById('dashboard').style.display = 'flex';
-      displayClimateChart();
+      showSection('dashboard-content');
     }
 
+    // Simulate signup
     function signup() {
       const username = document.getElementById('signupUsername').value;
       const email = document.getElementById('signupEmail').value;
@@ -249,7 +313,6 @@
         return;
       }
 
-      // Clear error and show login page
       signupError.innerText = '';
       showLogin();
     }
@@ -269,6 +332,7 @@
       forgotPasswordSuccess.innerText = 'A password reset link has been sent to your email.';
     }
 
+    // Display climate chart
     function displayClimateChart() {
       const ctx = document.getElementById('climateChart').getContext('2d');
       new Chart(ctx, {
@@ -298,6 +362,7 @@
       });
     }
 
+    // Simulate climate prediction
     function predictClimate(event) {
       event.preventDefault();
       const co2 = document.getElementById('co2Input').value;
@@ -305,6 +370,7 @@
       document.getElementById('predictionResult').innerText = `Predicted climate impact based on ${co2} ppm CO₂ and ${deforestation} hectares/year deforestation.`;
     }
 
+    // Simulate carbon footprint calculation
     function calculateFootprint(event) {
       event.preventDefault();
       const transport = document.getElementById('transportInput').value;
@@ -313,6 +379,9 @@
       const totalFootprint = parseFloat(transport) + parseFloat(energy) + parseFloat(diet);
       document.getElementById('footprintResult').innerText = `Your total carbon footprint is ${totalFootprint} kg CO₂/year.`;
     }
+
+    // Initialize chart when the page loads
+    window.onload = displayClimateChart;
   </script>
 </body>
 </html>
